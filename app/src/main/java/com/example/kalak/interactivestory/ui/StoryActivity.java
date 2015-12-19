@@ -22,7 +22,8 @@ public class StoryActivity extends AppCompatActivity {
         if (name == null) {
             name = "nombre";
         }
-        Log.d(TAG, name);
+
+        //Log.d(TAG, name);
 
     }
 
