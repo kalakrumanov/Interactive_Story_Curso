@@ -8,9 +8,11 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.kalak.interactivestory.R;
 import com.example.kalak.interactivestory.model.Page;
@@ -40,36 +42,70 @@ public class StoryActivity extends AppCompatActivity {
             mName = "nombre";
         }
 
-        Log.d(TAG, mName);
+        // Log.d(TAG, mName);
 
         mImageView = (ImageView) findViewById(R.id.storyImageView);
         mTextView = (TextView) findViewById(R.id.storyTextView);
         mChoice1 = (Button) findViewById(R.id.choiceButton1);
         mChoice2 = (Button) findViewById(R.id.choiceButton2);
 
-        loadPage();
+        loadPage(0);
     }
 
 
-    private void loadPage() {
-        Page page = mStory.getPage(1);
+    private void loadPage(int choice) {
+        final Page mCurrentPage = mStory.getPage(choice);
 
 
-        //Drawable drawable = ResourcesCompat.getDrawable(getResources(), page.getmImageId(), null);
-        //Drawable drawable = ContextCompat.getDrawable(this, page.getmImageId());
+        //Drawable drawable = ResourcesCompat.getDrawable(getResources(), mCurrentPage.getmImageId(), null);
+        //Drawable drawable = ContextCompat.getDrawable(this, mCurrentPage.getmImageId());
         Drawable drawable = ContextCompat.getDrawable(this, R.drawable.page1);
         mImageView.setImageDrawable(drawable);
 
 
-        String pageText = page.getmText();
+        String pageText = mCurrentPage.getmText();
 
         // Añade si tenemos un placeholder "%1", y si no, nada
         pageText = String.format(pageText,mName);
 
         mTextView.setText(pageText);
 
-        mChoice1.setText(page.getmChoice1().getmText());
-        mChoice2.setText(page.getmChoice2().getmText());
+        if (mCurrentPage.ismIsFinal()) {
+            mChoice1.setVisibility(View.INVISIBLE);
+            mChoice2.setText("PLAY AGAIN");
+            mChoice2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+        } else {
+
+            mChoice1.setText(mCurrentPage.getmChoice1().getmText());
+            mChoice2.setText(mCurrentPage.getmChoice2().getmText());
+
+            mChoice1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int nextPage = mCurrentPage.getmChoice1().getmNextPage();
+
+                        loadPage(nextPage);
+
+
+                }
+            });
+
+            mChoice2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int nextPage = mCurrentPage.getmChoice2().getmNextPage();
+
+                        loadPage(nextPage);
+
+                }
+            });
+
+        }
 
     }
 

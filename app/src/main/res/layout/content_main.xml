@@ -25,7 +25,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="START YOUR ADVENTURE"
         android:id="@+id/StartButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
